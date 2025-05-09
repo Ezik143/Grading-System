@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Team_Yeri_enrollment_system.GradingLibrary.Data;
 
@@ -11,9 +12,11 @@ using Team_Yeri_enrollment_system.GradingLibrary.Data;
 namespace GradingSystemApi.Migrations
 {
     [DbContext(typeof(enrollmentDbContext))]
-    partial class enrollmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508112951_FixCascadePaths2")]
+    partial class FixCascadePaths2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,7 @@ namespace GradingSystemApi.Migrations
                     b.Property<int>("courseID")
                         .HasColumnType("int");
 
-                    b.Property<string>("subjectCode")
+                    b.Property<int>("subjectCode")
                         .HasColumnType("int");
 
                     b.Property<string>("subjectCode1")

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace Team_Yeri_enrollment_system.GradingLibrary.Models
+namespace GradingSystemApi.Models.Entities
 {
     public class Terms
     {
@@ -7,9 +7,14 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Models
         [Required]
         public required int Term_ID { get; set; }
         [Required]
+        [MaxLength(60)]
         public required string Term_Name { get; set; }
         [Required]
-
         public required DateOnly Academic_Year { get; set; }
+
+        //Terms relation to Grades, zero to many
+        public ICollection<Grades> Grades { get; set; } = new List<Grades>();
+
+        public Enrollment Enrollment { get; set; }
     }
 }

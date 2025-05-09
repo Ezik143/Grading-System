@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Team_Yeri_enrollment_system.GradingLibrary.Models;
 using Team_Yeri_enrollment_system.GradingLibrary.Data;
-using Team_Yeri_enrollment_system.GradingLibrary.Models;
+using GradingSystemApi.Models.addDto;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GradingSystemApi.Controllers
 {
@@ -10,88 +10,84 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class ClassesController : ControllerBase
     {
-        private readonly EnrollmentDbContext _context;
-
-        public ClassesController(EnrollmentDbContext context)
+        private readonly enrollmentDbContext dbContext;
+        public ClassesController(enrollmentDbContext dbContext)
         {
-            _context = context;
+            this.dbContext = dbContext;
         }
-
-        // GET: api/classes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Classes>>> GetClasses()
+        public IActionResult getAllClasses()
         {
-            return await _context.Classes.ToListAsync();
+            var classes = dbContext.Classes
+                .Include(c => c.Teacher) // Include related Teacher entity
+                .Include(c => c.Subject) // Include related Subject entity
+                .ToList();
+            return Ok(classes);
         }
 
-        // GET: api/classes/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Classes>> GetClass(int id)
+        [HttpGet]
+        [Route("{Class_ID}")]
+        public IActionResult getClassesByID(int Class_ID)
         {
-            var classItem = await _context.Classes.FindAsync(id);
-            if (classItem == null)
+            var class_ID = dbContext.Classes.Find(Class_ID);
+            if (class_ID is null)
             {
                 return NotFound();
             }
-            return classItem;
+            return Ok(class_ID);
         }
 
-        // POST: api/classes
         [HttpPost]
-        public async Task<ActionResult<Classes>> CreateClass(Classes newClass)
+        public IActionResult addClasses(ClassesDto addClasses)
         {
-            _context.Classes.Add(newClass);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetClass), new { id = newClass.Class_ID }, newClass);
+            if (addClasses == null)
+            {
+                return BadRequest("Class cannot be null");
+            }
+            var classEntity = new Classes()
+            {
+                classID = 0, // Assign a default value for the required property
+                teacherID = addClasses.teacherID,
+                Schedule = addClasses.Schedule,
+                subjectCode = addClasses.subjectCode
+            };
+            dbContext.Add(classEntity);
+            dbContext.SaveChanges();
+            return Ok(classEntity);
         }
 
-        // PUT: api/classes/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClass(int id, Classes updatedClass)
+        [HttpPut]
+        [Route("{Class_ID}")]
+        public IActionResult updateCourses(int Class_ID, ClassesDto updateClassesDto)
         {
-            if (id != updatedClass.Class_ID)
+            if (updateClassesDto == null)
             {
-                return BadRequest();
+                return BadRequest("Class cannot be null");
             }
-
-            _context.Entry(updatedClass).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClassExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/classes/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClass(int id)
-        {
-            var classItem = await _context.Classes.FindAsync(id);
-            if (classItem == null)
+            var classEntity = dbContext.Classes.Find(Class_ID);
+            if (classEntity == null)
             {
                 return NotFound();
             }
-
-            _context.Classes.Remove(classItem);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            classEntity.classID = Class_ID;
+            classEntity.teacherID = updateClassesDto.teacherID;
+            classEntity.Schedule = updateClassesDto.Schedule;
+            classEntity.subjectCode = updateClassesDto.subjectCode;
+            dbContext.SaveChanges();
+            return Ok(classEntity);
         }
-
-        private bool ClassExists(int id)
+        [HttpDelete]
+        [Route("{Class_ID}")]
+        public IActionResult deleteCourses(int Class_ID)
         {
-            return _context.Classes.Any(e => e.Class_ID == id);
+            var classes = dbContext.Classes.Find(Class_ID);
+            if (classes == null)
+            {
+                return NotFound();
+            }
+            dbContext.Remove(classes);
+            dbContext.SaveChanges();
+            return Ok(classes);
         }
     }
 }
