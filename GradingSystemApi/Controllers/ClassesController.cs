@@ -10,8 +10,8 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class ClassesController : ControllerBase
     {
-        private readonly enrollmentDbContext dbContext;
-        public ClassesController(enrollmentDbContext dbContext)
+        private readonly EnrollmentDbContext dbContext;
+        public ClassesController(EnrollmentDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -26,15 +26,20 @@ namespace GradingSystemApi.Controllers
         }
 
         [HttpGet]
-        [Route("{Class_ID}")]
-        public IActionResult getClassesByID(int Class_ID)
+        [Route("{ClassID}")]
+        public IActionResult getClassesByID(int ClassID)
         {
-            var class_ID = dbContext.Classes.Find(Class_ID);
-            if (class_ID is null)
+            var classEntity = dbContext.Classes.Find(ClassID);
+            if (classEntity is null)
             {
                 return NotFound();
             }
-            return Ok(class_ID);
+            dbContext.SaveChanges();
+            var classWithDetails = dbContext.Classes
+                .Include(c => c.Teacher) // Include related Teacher entity
+                .Include(c => c.Subject) // Include related Subject entity
+                .FirstOrDefault(c => c.ClassID == classEntity.ClassID);
+            return Ok(classWithDetails);
         }
 
         [HttpPost]
@@ -44,49 +49,97 @@ namespace GradingSystemApi.Controllers
             {
                 return BadRequest("Class cannot be null");
             }
+
+
+            var existTeacher = dbContext.Teachers.Any(t => t.TeacherID == addClasses.TeacherID);
+            if (!existTeacher)
+            {
+                return BadRequest($"Teacher with ID {addClasses.TeacherID} does not exist");
+            }
+
+            var existSubject = dbContext.Subjects.Any(s => s.SubjectCode == addClasses.SubjectCode);
+            if (!existSubject)
+            {
+                return BadRequest($"Subject with code {addClasses.SubjectCode} does not exist");
+            }
+
             var classEntity = new Classes()
             {
-                classID = 0, // Assign a default value for the required property
-                teacherID = addClasses.teacherID,
+                TeacherID = addClasses.TeacherID,
                 Schedule = addClasses.Schedule,
-                subjectCode = addClasses.subjectCode
+                SubjectCode = addClasses.SubjectCode
             };
             dbContext.Add(classEntity);
             dbContext.SaveChanges();
-            return Ok(classEntity);
+
+            var createdClass = dbContext.Classes
+            .Include(c => c.Teacher)
+            .Include(c => c.Subject)
+            .FirstOrDefault(c => c.ClassID == classEntity.ClassID);
+
+            return Ok(createdClass);
+
         }
 
         [HttpPut]
-        [Route("{Class_ID}")]
-        public IActionResult updateCourses(int Class_ID, ClassesDto updateClassesDto)
+        [Route("{ClassID}")]
+        public IActionResult updateCourses(int ClassID, ClassesDto updateClassesDto)
         {
             if (updateClassesDto == null)
             {
                 return BadRequest("Class cannot be null");
             }
-            var classEntity = dbContext.Classes.Find(Class_ID);
+
+            var classEntity = dbContext.Classes.Find(ClassID);
             if (classEntity == null)
             {
                 return NotFound();
             }
-            classEntity.classID = Class_ID;
-            classEntity.teacherID = updateClassesDto.teacherID;
+
+            var teacherExist = dbContext.Teachers.Any(t => t.TeacherID == updateClassesDto.TeacherID);
+            if (!teacherExist)
+            {
+                return BadRequest($"Teacher with ID {updateClassesDto.TeacherID} does not exist");
+            }
+
+            var subjectExist = dbContext.Subjects.Any(s => s.SubjectCode == updateClassesDto.SubjectCode);
+            if (!subjectExist)
+            {
+                return BadRequest($"Subject with code {updateClassesDto.SubjectCode} does not exist");
+            }
+
+            // Update properties
+            classEntity.TeacherID = updateClassesDto.TeacherID;
             classEntity.Schedule = updateClassesDto.Schedule;
-            classEntity.subjectCode = updateClassesDto.subjectCode;
+            classEntity.SubjectCode = updateClassesDto.SubjectCode;
+
             dbContext.SaveChanges();
-            return Ok(classEntity);
+
+            var updatedClass = dbContext.Classes
+                .Include(c => c.Teacher) // Include related Teacher entity
+                .Include(c => c.Subject) // Include related Subject entity
+                .FirstOrDefault(c => c.ClassID == classEntity.ClassID);
+
+            return Ok(updatedClass);
         }
         [HttpDelete]
-        [Route("{Class_ID}")]
-        public IActionResult deleteCourses(int Class_ID)
+        [Route("{ClassID}")]
+        public IActionResult deleteCourses(int ClassID )
         {
-            var classes = dbContext.Classes.Find(Class_ID);
+            var classes = dbContext.Classes.Find(ClassID );
             if (classes == null)
             {
                 return NotFound();
             }
             dbContext.Remove(classes);
+
             dbContext.SaveChanges();
+
+            var deletedClass = dbContext.Classes
+                .Include(c => c.Teacher) // Include related Teacher entity
+                .Include(c => c.Subject) // Include related Subject entity
+                .FirstOrDefault(c => c.ClassID == classes.ClassID);
+
             return Ok(classes);
         }
     }

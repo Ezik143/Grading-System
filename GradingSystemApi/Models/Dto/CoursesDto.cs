@@ -2,10 +2,9 @@
 {
     public class CoursesDto
     {
-            public required string courseName { get; set; }
+            public required string CourseName { get; set; }
 
             public required string Department { get; set; }
-
-            public required int totalUnits { get; set; }
+            public required int TotalUnits { get; set; }
     }
 }

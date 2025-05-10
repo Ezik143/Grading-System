@@ -1,21 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Team_Yeri_enrollment_system.GradingLibrary.Models;
-namespace GradingSystemApi.Models.Entities
+
+namespace GradingSystemApi.Models.addDto
 {
-    public class Teacher
+    public class TeacherDto
     {
-        [Key]
-        [Required]
-        public int TeacherID { get; set; }
-        [Required]
         public required string FirstName { get; set; }
-        [Required]
         public required string Lastname { get; set; }
-        [Required]
         public required string Email { get; set; }
-        [Required]
         public required string PhoneNumber { get; set; }
-        [Required]
         public required string Department { get; set; }
     }
 }

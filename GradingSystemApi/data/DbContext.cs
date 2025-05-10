@@ -4,9 +4,9 @@ using Team_Yeri_enrollment_system.GradingLibrary.Models;
 
 namespace Team_Yeri_enrollment_system.GradingLibrary.Data
 {
-    public class enrollmentDbContext : DbContext
+    public class EnrollmentDbContext : DbContext
     {
-        public enrollmentDbContext(DbContextOptions<enrollmentDbContext> options)
+        public EnrollmentDbContext(DbContextOptions<EnrollmentDbContext> options)
             : base(options)
         {
         }
@@ -14,13 +14,13 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Data
         // DbSets for each model
         public DbSet<Classes> Classes { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<courseSubject> CourseSubjects { get; set; }
+        public DbSet<CourseSubject> CourseSubjects { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Grades> Grades { get; set; }
         public DbSet<Students> Students { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<teacherSubject> TeacherSubjects { get; set; }
+        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
         public DbSet<Terms> Terms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

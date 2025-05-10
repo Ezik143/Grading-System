@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-builder.Services.AddDbContext<enrollmentDbContext>(options =>
+builder.Services.AddDbContext<EnrollmentDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GradingSystemApiConnectionString")));
 
 var app = builder.Build();
@@ -35,11 +35,7 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
     });
 }
-
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-
 app.Run();

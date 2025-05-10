@@ -7,53 +7,22 @@ namespace GradingSystemApi.Models.Entities
     {
         [Key]
         [Required]
-        public required int gradeID { get; set; }
-
-        //Foreign Key to studentID
-        /// <summary>
-        /// Relations: One and only one
-        /// Grades is tied to a specific student
-        /// </summary>
+        public int GradeID { get; set; }
         [Required]
-        public required int studentID { get; set; }
-        [ForeignKey("studentID")]
-        public Students Student { get; set; }
-
-        // Foreign Key to classID
-        /// <summary>
-        /// Relations: One and only one
-        /// Grade is tied to a specific class
-        /// </summary>
+        [ForeignKey("StudentID")]
+        public required int StudentID { get; set; }
         [Required]
-        public required int classID { get; set; }
-        [ForeignKey("classID")]
-        public Classes Class { get; set; }
-
+        [ForeignKey("ClassID")]
+        public required int ClassID { get; set; }
         [Required]
-        [MaxLength(60)]
-        public required string assesmentType { get; set; }
-
-        // Foreign Key to termID
-        /// <summary>
-        /// relation: One and only One
-        /// Each Grade is tied to exactly one Term
-        /// </summary>
+        public required string AssessmentType { get; set; }
         [Required]
-        public required int termID { get; set; }
-        [ForeignKey("termID")]
-        public Terms Term { get; set; }
-
-        // Foreign Key to subjectCode
-        /// <summary>
-        /// relation: Zero or many
-        /// Each grade is associated with a specific subject
-        /// </summary>
+        [ForeignKey("TermID")]
+        public required int TermID { get; set; }
         [Required]
-        public required string subjectCode { get; set; }
-        [ForeignKey("subjectCode")]
-        public Subject Subject { get; set; }
-
+        [ForeignKey("SubjectCode")]
+        public required string SubjectCode { get; set; }
         [Column(TypeName = "decimal(5,2)")]
-        public  decimal Score { get; set; }
+        public decimal Score { get; set; }
     }
 }

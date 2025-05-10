@@ -5,16 +5,10 @@ namespace GradingSystemApi.Models.Entities
     {
         [Key]
         [Required]
-        public required int Term_ID { get; set; }
+        public int TermID { get; set; }
         [Required]
-        [MaxLength(60)]
-        public required string Term_Name { get; set; }
+        public required string TermName { get; set; }
         [Required]
-        public required DateOnly Academic_Year { get; set; }
-
-        //Terms relation to Grades, zero to many
-        public ICollection<Grades> Grades { get; set; } = new List<Grades>();
-
-        public Enrollment Enrollment { get; set; }
+        public required DateOnly AcademicYear { get; set; }
     }
 }
