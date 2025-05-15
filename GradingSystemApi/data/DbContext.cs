@@ -4,9 +4,9 @@ using Team_Yeri_enrollment_system.GradingLibrary.Models;
 
 namespace Team_Yeri_enrollment_system.GradingLibrary.Data
 {
-    public class EnrollmentDbContext : DbContext
+    public class GradingDbContext : DbContext
     {
-        public EnrollmentDbContext(DbContextOptions<EnrollmentDbContext> options)
+        public GradingDbContext(DbContextOptions<GradingDbContext> options)
             : base(options)
         {
         }

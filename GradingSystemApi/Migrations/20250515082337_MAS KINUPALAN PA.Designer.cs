@@ -11,9 +11,9 @@ using Team_Yeri_enrollment_system.GradingLibrary.Data;
 
 namespace GradingSystemApi.Migrations
 {
-    [DbContext(typeof(EnrollmentDbContext))]
-    [Migration("20250513060634_Final form sa ka kupalan")]
-    partial class Finalformsakakupalan
+    [DbContext(typeof(GradingDbContext))]
+    [Migration("20250515082337_MAS KINUPALAN PA")]
+    partial class MASKINUPALANPA
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

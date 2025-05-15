@@ -10,7 +10,7 @@ using Team_Yeri_enrollment_system.GradingLibrary.Data;
 
 namespace GradingSystemApi.Migrations
 {
-    [DbContext(typeof(EnrollmentDbContext))]
+    [DbContext(typeof(GradingDbContext))]
     partial class EnrollmentDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

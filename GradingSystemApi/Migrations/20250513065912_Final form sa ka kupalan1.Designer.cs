@@ -11,7 +11,7 @@ using Team_Yeri_enrollment_system.GradingLibrary.Data;
 
 namespace GradingSystemApi.Migrations
 {
-    [DbContext(typeof(EnrollmentDbContext))]
+    [DbContext(typeof(GradingDbContext))]
     [Migration("20250513065912_Final form sa ka kupalan1")]
     partial class Finalformsakakupalan1
     {

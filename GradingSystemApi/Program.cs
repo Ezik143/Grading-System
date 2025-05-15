@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-builder.Services.AddDbContext<EnrollmentDbContext>(options =>
+builder.Services.AddDbContext<GradingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GradingSystemApiConnectionString")));
 
 var app = builder.Build();

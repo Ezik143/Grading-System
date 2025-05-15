@@ -10,9 +10,9 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class SubjectController : ControllerBase
     {
-        private readonly EnrollmentDbContext DbContext;
+        private readonly GradingDbContext DbContext;
 
-        public SubjectController(EnrollmentDbContext DbContext)
+        public SubjectController(GradingDbContext DbContext)
         {
             this.DbContext = DbContext;
         }

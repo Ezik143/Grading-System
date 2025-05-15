@@ -8,9 +8,9 @@ namespace GradingSystemApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClassController (EnrollmentDbContext DbContext): ControllerBase
+    public class ClassController (GradingDbContext DbContext): ControllerBase
     {
-        private readonly EnrollmentDbContext DbContext = DbContext;
+        private readonly GradingDbContext DbContext = DbContext;
       
         [HttpGet]
         public IActionResult GetAllClass()
