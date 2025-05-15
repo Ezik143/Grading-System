@@ -8,9 +8,12 @@ namespace GradingSystemApi.Models.Dto
     public class EnrollmentDto
     {
         [Required]
-        public  int StudentID { get; set; }
-        public  int CourseID { get; set; }
-        public  int TermID { get; set; }
-        public  char EnrollmentStatus { get; set; }
+        public  required int StudentID { get; set; }
+        [Required]
+        public  required int CourseID { get; set; }
+        [Required]
+        public  required int TermID { get; set; }
+        [Required]
+        public  required string EnrollmentStatus { get; set; }
     }
 }

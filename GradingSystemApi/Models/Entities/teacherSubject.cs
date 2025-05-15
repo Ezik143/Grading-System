@@ -10,11 +10,13 @@ namespace GradingSystemApi.Models.Entities
         [Required]
         public required int TeacherID { get; set; }
         [ForeignKey("TeacherID")]
-        public  Teacher Teacher { get; set; }
+        [Required]
+        public  Teacher? Teacher { get; set; }
 
         [Required]
         public required string SubjectCode { get; set; }
         [ForeignKey("SubjectCode")]
-        public  Subject Subject { get; set; }
+        [Required]
+        public  Subject? Subject { get; set; }
     }
 }

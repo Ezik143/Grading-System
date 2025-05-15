@@ -11,10 +11,12 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Models
         [Required]
         public required int CourseID { get; set; }
         [ForeignKey("CourseID")]
-        public  Course Course { get; set; }
+        [Required]
+        public Course? Course { get; set; }
         [Required]
         public required string SubjectCode { get; set; }
         [ForeignKey("SubjectCode")]
-        public  Subject Subject { get; set; }
+        [Required]
+        public Subject? Subject { get; set; }
     }
 }

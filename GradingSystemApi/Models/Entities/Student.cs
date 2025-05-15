@@ -3,25 +3,25 @@ using System.ComponentModel.DataAnnotations;
 namespace GradingSystemApi.Models.Entities
 
 {
-    public class Students
+    public class Student
     {
         [Key]
         [Required]
         public int StudentID { get; set; }
-
-        [MaxLength(200)]
-        public required string Name { get; set; }
-        [MaxLength(123)]
+        [Required]
+        public required string FirstName { get; set; }
+        [Required]
+        public required string MiddleName { get; set; }
+        [Required]
+        public required string LastName { get; set; }
+        [Required]
         public required DateOnly BirthDate { get; set; }
-
         [Required]
         [MaxLength(1)]
         public required char Sex { get; set; }
         [Required]
-        [MaxLength(60)]
-        public required string Gmail { get; set; }
+        public required string Email { get; set; }
         [Required]
-        [MaxLength(20)]
-        public required string Number { get; set; }
-    }
+        public required string PhoneNumber { get; set; }
+    }   
 }

@@ -11,25 +11,25 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        private readonly EnrollmentDbContext dbContext;
+        private readonly EnrollmentDbContext DbContext;
 
-        public CourseController(EnrollmentDbContext dbContext)
+        public CourseController(EnrollmentDbContext DbContext)
         {
-            this.dbContext = dbContext;
+            this.DbContext = DbContext;
         }
         [HttpGet]
         public IActionResult getCourse()
         {
-            var courses = dbContext.Courses
+            var Course = DbContext.Course
                 .ToList();
-            return Ok(courses);
+            return Ok(Course);
         }
 
         [HttpGet]
         [Route("{CourseID}")]
         public IActionResult GetCourseByID(int CourseID)
         {
-            var CourseEntity = dbContext.Courses.Find(CourseID);
+            var CourseEntity = DbContext.Course.Find(CourseID);
             if(CourseEntity is null)
             {
                 return NotFound();
@@ -38,51 +38,37 @@ namespace GradingSystemApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCourses(CoursesDto AddCourse)
+        public IActionResult AddCourse(CourseDto AddCourse)
         {
-            if (AddCourse == null)
-            {
-                return BadRequest("Course cannot be null");
-            }
             var courseEntity = new Course()
             {
                 CourseName = AddCourse.CourseName,
                 Department = AddCourse.Department,
                 TotalUnits = AddCourse.TotalUnits
             };
-            dbContext.Add(courseEntity);
-            dbContext.SaveChanges();
-
-            var CreatedCourse = dbContext.Courses
+            DbContext.Add(courseEntity);
+            DbContext.SaveChanges();
+            var CreatedCourse = DbContext.Course
                 .FirstOrDefault(c => c.CourseID == courseEntity.CourseID);
-
             return Ok(courseEntity);
         }
 
         [HttpPut]
         [Route("{CourseID}")]
-        public IActionResult updateCourses(int CourseID, CoursesDto UpdateCoursesDto)
+        public IActionResult updateCourse(int CourseID, CourseDto UpdateCourseDto)
         {
-            var course = dbContext.Courses.Find(CourseID);
+            var course = DbContext.Course.Find(CourseID);
             if (course == null)
             {
                 return NotFound();
             }
+            course.CourseName = UpdateCourseDto.CourseName;
+            course.Department = UpdateCourseDto.Department;
+            course.TotalUnits = UpdateCourseDto.TotalUnits;
 
-            //check if a course with the same name already exists
-            var subjectExists = dbContext.Courses.Any(s => s.CourseName == UpdateCoursesDto.CourseName);
-            if (subjectExists)
-            {
-                return BadRequest("A course with the same name already exists.");
-            }
+            DbContext.SaveChanges();
 
-            course.CourseName = UpdateCoursesDto.CourseName;
-            course.Department = UpdateCoursesDto.Department;
-            course.TotalUnits = UpdateCoursesDto.TotalUnits;
-
-            dbContext.SaveChanges();
-
-            var UpdatedCourse = dbContext.Courses
+            var UpdatedCourse = DbContext.Course
                 .FirstOrDefault(c => c.CourseID == course.CourseID);
 
             return Ok(course);
@@ -90,17 +76,17 @@ namespace GradingSystemApi.Controllers
 
         [HttpDelete]
         [Route("{CourseID}")]
-        public IActionResult deleteCourses(int CourseID)
+        public IActionResult DeleteCourse(int CourseID)
         {
-            var course = dbContext.Courses.Find(CourseID);
+            var course = DbContext.Course.Find(CourseID);
             if (course == null)
             {
                 return NotFound();
             } 
-            dbContext.Courses.Remove(course);
-            dbContext.SaveChanges();
+            DbContext.Course.Remove(course);
+            DbContext.SaveChanges();
 
-            var DeletedCourse = dbContext.Courses
+            var DeletedCourse = DbContext.Course
                 .FirstOrDefault(c => c.CourseID == course.CourseID);
 
             return Ok(course);

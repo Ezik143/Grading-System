@@ -11,17 +11,20 @@ namespace GradingSystemApi.Models.Entities
         [Required]
         public required int StudentID { get; set; }
         [ForeignKey("StudentID")]
-        public Students Student { get; set; }
+        [Required]
+        public Student? Student { get; set; }
         [Required]
         public required int CourseID { get; set; }
         [ForeignKey("CourseID")]
-        public Course Course { get; set; }
+        [Required]
+        public Course? Course { get; set; }
         [Required]
         public required int TermID { get; set; }
         [ForeignKey("TermID")]
-        public Terms Term { get; set; }
         [Required]
-        public required char EnrollmentStatus { get; set; }
+        public Term? Term { get; set; }
+        [Required]
+        public required string EnrollmentStatus { get; set; }
 
     }
 }

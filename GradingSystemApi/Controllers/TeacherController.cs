@@ -18,17 +18,17 @@ namespace GradingSystemApi.Controllers
             this.DbContext = DbContext;
         }
         [HttpGet]
-        public IActionResult GetAllTeachers()
+        public IActionResult GetAllTeacher()
         {
-            var teachers = DbContext.Teachers
+            var Teacher = DbContext.Teacher
                 .ToList();
-            return Ok(teachers);
+            return Ok(Teacher);
         }
         [HttpGet]
         [Route("{TeacherID}")]
         public IActionResult GetTeacherByID(int TeacherID)
         {
-            var TeacherEntity = DbContext.Teachers.Find(TeacherID);
+            var TeacherEntity = DbContext.Teacher.Find(TeacherID);
             if (TeacherEntity == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace GradingSystemApi.Controllers
         [Route("{TeacherID}")]
         public IActionResult UpdateTeacher(int TeacherID, TeacherDto teacher)
         {
-            var TeacherEntity = DbContext.Teachers.Find(TeacherID);
+            var TeacherEntity = DbContext.Teacher.Find(TeacherID);
             if (TeacherEntity == null)
             {
                 return NotFound();
@@ -77,12 +77,12 @@ namespace GradingSystemApi.Controllers
         [Route("{TeacherID}")]
         public IActionResult DeleteTeacher(int TeacherID)
         {
-            var TeacherEntity = DbContext.Teachers.Find(TeacherID);
+            var TeacherEntity = DbContext.Teacher.Find(TeacherID);
             if (TeacherEntity == null)
             {
                 return NotFound();
             }
-            DbContext.Teachers.Remove(TeacherEntity);
+            DbContext.Teacher.Remove(TeacherEntity);
             DbContext.SaveChanges();
             return Ok(TeacherEntity);
 

@@ -11,28 +11,29 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class CourseSubjectController : ControllerBase
     {
-        private readonly EnrollmentDbContext dbContext;
+        private readonly EnrollmentDbContext DbContext;
 
-        public CourseSubjectController(EnrollmentDbContext dbContext)
+        public CourseSubjectController(EnrollmentDbContext DbContext)
         {
-            this.dbContext = dbContext;
+            this.DbContext = DbContext;
         }
 
         [HttpGet]
-        public IActionResult GetAllCourseSubjects()
+        public IActionResult GetAllCourseSubject()
         {
-            var courseSubjects = dbContext.CourseSubjects
+            var CourseSubject = DbContext.CourseSubject
                 .Include(cs => cs.Course)  // This requires you to add navigation property
                 .Include(cs => cs.Subject) // This requires you to add navigation property
                 .ToList();
-            return Ok(courseSubjects);
+            return Ok(CourseSubject);
         }
 
         [HttpGet]
         [Route("{courseSubjectId}")]
         public IActionResult GetCourseSubjectById(int courseSubjectId)
         {
-            var courseSubject = dbContext.CourseSubjects
+
+            var courseSubject = DbContext.CourseSubject
                 .Include(cs => cs.Course)  // This requires you to add navigation property
                 .Include(cs => cs.Subject) // This requires you to add navigation property
                 .FirstOrDefault(cs => cs.CourseSubjectID == courseSubjectId);
@@ -46,38 +47,31 @@ namespace GradingSystemApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCourseSubject(CourseSubjectDto courseSubjectDto)
+        public IActionResult AddCourseSubject(CourseSubjectDto AddCourseSubject)
         {
-            if (courseSubjectDto == null)
+            var ExistCourse = DbContext.CourseSubject.Any(c => c.CourseID == AddCourseSubject.CourseID);
+            if (!ExistCourse)
             {
-                return BadRequest("CourseSubject cannot be null");
+                return BadRequest($"Course with code {AddCourseSubject.CourseID} does not exist");
             }
 
-            // Validate that the Course exists
-            var courseExists = dbContext.Courses.Any(c => c.CourseID == courseSubjectDto.CourseID);
-            if (!courseExists)
-            {
-                return BadRequest($"Course with ID {courseSubjectDto.CourseID} does not exist");
-            }
-
-            // Validate that the Subject exists
-            var subjectExists = dbContext.Subjects.Any(s => s.SubjectCode == courseSubjectDto.SubjectCode);
+            var subjectExists = DbContext.Subject.Any(s => s.SubjectCode == AddCourseSubject.SubjectCode);
             if (!subjectExists)
             {
-                return BadRequest($"Subject with code {courseSubjectDto.SubjectCode} does not exist");
+                return BadRequest($"Subject with code {AddCourseSubject.SubjectCode} does not exist");
             }
 
             var courseSubjectEntity = new CourseSubject
             {
-                CourseID = courseSubjectDto.CourseID,
-                SubjectCode = courseSubjectDto.SubjectCode
+                CourseID = AddCourseSubject.CourseID,
+                SubjectCode = AddCourseSubject.SubjectCode
             };
 
-            dbContext.CourseSubjects.Add(courseSubjectEntity);
-            dbContext.SaveChanges();
+            DbContext.CourseSubject.Add(courseSubjectEntity);
+            DbContext.SaveChanges();
 
             // Return the created entity with its relations
-            var createdEntity = dbContext.CourseSubjects
+            var createdEntity = DbContext.CourseSubject
                 .Include(cs => cs.Course)  // This requires you to add navigation property
                 .Include(cs => cs.Subject) // This requires you to add navigation property
                 .FirstOrDefault(cs => cs.CourseSubjectID == courseSubjectEntity.CourseSubjectID);
@@ -87,40 +81,33 @@ namespace GradingSystemApi.Controllers
 
         [HttpPut]
         [Route("{courseSubjectId}")]
-        public IActionResult UpdateCourseSubject(int courseSubjectId, CourseSubjectDto courseSubjectDto)
+        public IActionResult UpdateCourseSubject(int courseSubjectId, CourseSubjectDto UpdateCourseSubject)
         {
-            if (courseSubjectDto == null)
-            {
-                return BadRequest("CourseSubject cannot be null");
-            }
-
-            var courseSubjectEntity = dbContext.CourseSubjects.Find(courseSubjectId);
+            var courseSubjectEntity = DbContext.CourseSubject.Find(courseSubjectId);
             if (courseSubjectEntity == null)
             {
                 return NotFound();
             }
 
-            // Validate that the Course exists
-            var courseExists = dbContext.Courses.Any(c => c.CourseID == courseSubjectDto.CourseID);
-            if (!courseExists)
+            var ExistCourse = DbContext.CourseSubject.Any(c => c.CourseID == UpdateCourseSubject.CourseID);
+            if (!ExistCourse)
             {
-                return BadRequest($"Course with ID {courseSubjectDto.CourseID} does not exist");
+                return BadRequest($"Course with code {UpdateCourseSubject.CourseID} does not exist");
             }
 
-            // Validate that the Subject exists
-            var subjectExists = dbContext.Subjects.Any(s => s.SubjectCode == courseSubjectDto.SubjectCode);
+            var subjectExists = DbContext.Subject.Any(s => s.SubjectCode == UpdateCourseSubject.SubjectCode);
             if (!subjectExists)
             {
-                return BadRequest($"Subject with code {courseSubjectDto.SubjectCode} does not exist");
+                return BadRequest($"Subject with code {UpdateCourseSubject.SubjectCode} does not exist");
             }
 
-            courseSubjectEntity.CourseID = courseSubjectDto.CourseID;
-            courseSubjectEntity.SubjectCode = courseSubjectDto.SubjectCode;
+            courseSubjectEntity.CourseID = UpdateCourseSubject.CourseID;
+            courseSubjectEntity.SubjectCode = UpdateCourseSubject.SubjectCode;
 
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // Return the updated entity with its relations
-            var updatedEntity = dbContext.CourseSubjects
+            var updatedEntity = DbContext.CourseSubject
                 .Include(cs => cs.Course)  // This requires you to add navigation property
                 .Include(cs => cs.Subject) // This requires you to add navigation property
                 .FirstOrDefault(cs => cs.CourseSubjectID == courseSubjectId);
@@ -132,16 +119,16 @@ namespace GradingSystemApi.Controllers
         [Route("{CourseSubjectId}")]
         public IActionResult DeleteCourseSubject(int CourseSubjectId)
         {
-            var courseSubjectEntity = dbContext.CourseSubjects.Find(CourseSubjectId);
+            var courseSubjectEntity = DbContext.CourseSubject.Find(CourseSubjectId);
             if (courseSubjectEntity == null)
             {
                 return NotFound();
             }
 
-            dbContext.CourseSubjects.Remove(courseSubjectEntity);
-            dbContext.SaveChanges();
+            DbContext.CourseSubject.Remove(courseSubjectEntity);
+            DbContext.SaveChanges();
 
-            var deletedEntity = dbContext.CourseSubjects
+            var deletedEntity = DbContext.CourseSubject
                 .Include(cs => cs.Course)
                 .Include(s => s.Subject)
                 .FirstOrDefault(c => c.CourseSubjectID == courseSubjectEntity.CourseSubjectID);

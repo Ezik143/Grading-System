@@ -5,7 +5,7 @@
 namespace GradingSystemApi.Migrations
 {
     /// <inheritdoc />
-    public partial class cls : Migration
+    public partial class Finalformsakakupalan1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -21,18 +21,18 @@ namespace GradingSystemApi.Controllers
         [HttpGet]
         public IActionResult GetAllTeacherSubject()
         {
-            var teacherSubjects = DbContext.TeacherSubjects
+            var TeacherSubject = DbContext.TeacherSubject
                 .Include(ts => ts.Teacher)
                 .Include(ts => ts.Subject)
                 .ToList();
-            return Ok(teacherSubjects);
+            return Ok(TeacherSubject);
         }
 
         [HttpGet]
         [Route("{TeacherSubjectID}")]
         public IActionResult GetTeacherSubjectByID(int TeacherSubjectID)
         {
-            var teacherSubjectEntity = DbContext.TeacherSubjects
+            var teacherSubjectEntity = DbContext.TeacherSubject
                 .Include(ts => ts.Teacher)
                 .Include(ts => ts.Subject)
                 .FirstOrDefault(ts => ts.TeacherSubjectID == TeacherSubjectID);
@@ -47,20 +47,15 @@ namespace GradingSystemApi.Controllers
         [HttpPost]
         public IActionResult AddTeacherSubject(TeacherSubjectDto addTeacherSubject)
         {
-            if (addTeacherSubject == null)
-            {
-                return BadRequest("TeacherSubject Cannot be null");
-            }
-
             // Validate that the Teacher exists
-            var teacherExists = DbContext.Teachers.Any(t => t.TeacherID == addTeacherSubject.TeacherID);
+            var teacherExists = DbContext.Teacher.Any(t => t.TeacherID == addTeacherSubject.TeacherID);
             if (!teacherExists)
             {
                 return BadRequest($"Teacher with ID {addTeacherSubject.TeacherID} does not exist");
             }
 
             // Validate that the Subject exists
-            var subjectExists = DbContext.Subjects.Any(s => s.SubjectCode == addTeacherSubject.SubjectCode);
+            var subjectExists = DbContext.Subject.Any(s => s.SubjectCode == addTeacherSubject.SubjectCode);
             if (!subjectExists)
             {
                 return BadRequest($"Subject with code {addTeacherSubject.SubjectCode} does not exist");
@@ -76,7 +71,7 @@ namespace GradingSystemApi.Controllers
             DbContext.SaveChanges();
 
             // Return the created entity with its relations
-            var createdEntity = DbContext.TeacherSubjects
+            var createdEntity = DbContext.TeacherSubject
                 .Include(ts => ts.Teacher)
                 .Include(ts => ts.Subject)
                 .FirstOrDefault(ts => ts.TeacherSubjectID == teacherSubjectEntity.TeacherSubjectID);
@@ -93,21 +88,21 @@ namespace GradingSystemApi.Controllers
                 return BadRequest("TeacherSubject cannot be null");
             }
 
-            var teacherSubjectEntity = DbContext.TeacherSubjects.Find(TeacherSubjectID);
+            var teacherSubjectEntity = DbContext.TeacherSubject.Find(TeacherSubjectID);
             if (teacherSubjectEntity == null)
             {
                 return NotFound();
             }
 
             // Validate that the Teacher exists
-            var teacherExists = DbContext.Teachers.Any(t => t.TeacherID == teacherSubject.TeacherID);
+            var teacherExists = DbContext.Teacher.Any(t => t.TeacherID == teacherSubject.TeacherID);
             if (!teacherExists)
             {
                 return BadRequest($"Teacher with ID {teacherSubject.TeacherID} does not exist");
             }
 
             // Validate that the Subject exists
-            var subjectExists = DbContext.Subjects.Any(s => s.SubjectCode == teacherSubject.SubjectCode);
+            var subjectExists = DbContext.Subject.Any(s => s.SubjectCode == teacherSubject.SubjectCode);
             if (!subjectExists)
             {
                 return BadRequest($"Subject with code {teacherSubject.SubjectCode} does not exist");
@@ -119,7 +114,7 @@ namespace GradingSystemApi.Controllers
             DbContext.SaveChanges();
 
             // Return the updated entity with its relations
-            var updatedEntity = DbContext.TeacherSubjects
+            var updatedEntity = DbContext.TeacherSubject
                 .Include(ts => ts.Teacher)
                 .Include(ts => ts.Subject)
                 .FirstOrDefault(ts => ts.TeacherSubjectID == TeacherSubjectID);
@@ -131,14 +126,14 @@ namespace GradingSystemApi.Controllers
         [Route("{TeacherSubjectID}")]
         public IActionResult DeleteTeacherSubject(int TeacherSubjectID)
         {
-            var teacherSubjectEntity = DbContext.TeacherSubjects.Find(TeacherSubjectID);
+            var teacherSubjectEntity = DbContext.TeacherSubject.Find(TeacherSubjectID);
             if (teacherSubjectEntity == null)
             {
                 return NotFound();
             }
-            DbContext.TeacherSubjects.Remove(teacherSubjectEntity);
+            DbContext.TeacherSubject.Remove(teacherSubjectEntity);
 
-            var deletedEntity = DbContext.TeacherSubjects
+            var deletedEntity = DbContext.TeacherSubject
                 .Include(t => t.Teacher)
                 .Include(s => s.Subject)
                 .FirstOrDefault(c => c.TeacherSubjectID == teacherSubjectEntity.TeacherSubjectID);

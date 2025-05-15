@@ -12,8 +12,8 @@ using Team_Yeri_enrollment_system.GradingLibrary.Data;
 namespace GradingSystemApi.Migrations
 {
     [DbContext(typeof(EnrollmentDbContext))]
-    [Migration("20250509130708_cls")]
-    partial class cls
+    [Migration("20250513060634_Final form sa ka kupalan")]
+    partial class Finalformsakakupalan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace GradingSystemApi.Migrations
 
                     b.Property<string>("EnrollmentStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
@@ -48,10 +48,16 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollments");
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("StudentID");
+
+                    b.HasIndex("TermID");
+
+                    b.ToTable("Enrollment");
                 });
 
-            modelBuilder.Entity("GradingSystemApi.Models.Entities.Grades", b =>
+            modelBuilder.Entity("GradingSystemApi.Models.Entities.Grade", b =>
                 {
                     b.Property<int>("GradeID")
                         .ValueGeneratedOnAdd()
@@ -72,19 +78,15 @@ namespace GradingSystemApi.Migrations
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
 
-                    b.Property<string>("SubjectCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TermID")
                         .HasColumnType("int");
 
                     b.HasKey("GradeID");
 
-                    b.ToTable("Grades");
+                    b.ToTable("Grade");
                 });
 
-            modelBuilder.Entity("GradingSystemApi.Models.Entities.Students", b =>
+            modelBuilder.Entity("GradingSystemApi.Models.Entities.Student", b =>
                 {
                     b.Property<int>("StudentID")
                         .ValueGeneratedOnAdd()
@@ -93,23 +95,27 @@ namespace GradingSystemApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"));
 
                     b.Property<DateOnly>("BirthDate")
-                        .HasMaxLength(123)
                         .HasColumnType("date");
 
-                    b.Property<string>("Gmail")
+                    b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Number")
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sex")
                         .IsRequired()
@@ -118,7 +124,7 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("Students");
+                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("GradingSystemApi.Models.Entities.Subject", b =>
@@ -135,7 +141,7 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("SubjectCode");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subject");
                 });
 
             modelBuilder.Entity("GradingSystemApi.Models.Entities.Teacher", b =>
@@ -168,7 +174,7 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("TeacherID");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teacher");
                 });
 
             modelBuilder.Entity("GradingSystemApi.Models.Entities.TeacherSubject", b =>
@@ -181,17 +187,21 @@ namespace GradingSystemApi.Migrations
 
                     b.Property<string>("SubjectCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TeacherID")
                         .HasColumnType("int");
 
                     b.HasKey("TeacherSubjectID");
 
-                    b.ToTable("TeacherSubjects");
+                    b.HasIndex("SubjectCode");
+
+                    b.HasIndex("TeacherID");
+
+                    b.ToTable("TeacherSubject");
                 });
 
-            modelBuilder.Entity("GradingSystemApi.Models.Entities.Terms", b =>
+            modelBuilder.Entity("GradingSystemApi.Models.Entities.Term", b =>
                 {
                     b.Property<int>("TermID")
                         .ValueGeneratedOnAdd()
@@ -208,10 +218,10 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("TermID");
 
-                    b.ToTable("Terms");
+                    b.ToTable("Term");
                 });
 
-            modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.Classes", b =>
+            modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.Class", b =>
                 {
                     b.Property<int>("ClassID")
                         .ValueGeneratedOnAdd()
@@ -236,7 +246,7 @@ namespace GradingSystemApi.Migrations
 
                     b.HasIndex("TeacherID");
 
-                    b.ToTable("Classes");
+                    b.ToTable("Class");
                 });
 
             modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.Course", b =>
@@ -260,7 +270,7 @@ namespace GradingSystemApi.Migrations
 
                     b.HasKey("CourseID");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.CourseSubject", b =>
@@ -276,14 +286,45 @@ namespace GradingSystemApi.Migrations
 
                     b.Property<string>("SubjectCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CourseSubjectID");
 
-                    b.ToTable("CourseSubjects");
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("SubjectCode");
+
+                    b.ToTable("CourseSubject");
                 });
 
-            modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.Classes", b =>
+            modelBuilder.Entity("GradingSystemApi.Models.Entities.Enrollment", b =>
+                {
+                    b.HasOne("Team_Yeri_enrollment_system.GradingLibrary.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GradingSystemApi.Models.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GradingSystemApi.Models.Entities.Term", "Term")
+                        .WithMany()
+                        .HasForeignKey("TermID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Term");
+                });
+
+            modelBuilder.Entity("GradingSystemApi.Models.Entities.TeacherSubject", b =>
                 {
                     b.HasOne("GradingSystemApi.Models.Entities.Subject", "Subject")
                         .WithMany()
@@ -300,6 +341,44 @@ namespace GradingSystemApi.Migrations
                     b.Navigation("Subject");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.Class", b =>
+                {
+                    b.HasOne("GradingSystemApi.Models.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GradingSystemApi.Models.Entities.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Team_Yeri_enrollment_system.GradingLibrary.Models.CourseSubject", b =>
+                {
+                    b.HasOne("Team_Yeri_enrollment_system.GradingLibrary.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GradingSystemApi.Models.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Subject");
                 });
 #pragma warning restore 612, 618
         }

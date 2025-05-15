@@ -3,16 +3,23 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Team_Yeri_enrollment_system.GradingLibrary.Models
 {
-    public class Classes
+    public class Class
     {
         [Key]
+        [Required]
         public int ClassID { get; set; }
+        [Required]
         public required int TeacherID { get; set; }
         [ForeignKey("TeacherID")]
-        public Teacher Teacher { get; set; }
+        [Required]
+        public Teacher? Teacher { get; set; }
+
+        [Required]
         public required string Schedule { get; set; }
+        [Required]
         public required string SubjectCode { get; set; }
         [ForeignKey("SubjectCode")]
-        public Subject Subject { get; set; }
+        [Required]
+        public Subject? Subject { get; set; }
     }
 }

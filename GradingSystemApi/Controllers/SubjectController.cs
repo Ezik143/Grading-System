@@ -10,25 +10,25 @@ namespace GradingSystemApi.Controllers
     [ApiController]
     public class SubjectController : ControllerBase
     {
-        private readonly EnrollmentDbContext dbContext;
+        private readonly EnrollmentDbContext DbContext;
 
-        public SubjectController(EnrollmentDbContext dbContext)
+        public SubjectController(EnrollmentDbContext DbContext)
         {
-            this.dbContext = dbContext;
+            this.DbContext = DbContext;
         }
 
         [HttpGet]
         public IActionResult GetSubject()
         {
-            var subjects = dbContext.Subjects
+            var Subject = DbContext.Subject
                 .ToList();
-            return Ok(subjects);
+            return Ok(Subject);
         }
         [HttpGet]
         [Route("{SubjectCode}")]
         public IActionResult GetSubjectByID(string SubjectCode)
         {
-            var subjectEntity = dbContext.Subjects.Find(SubjectCode);
+            var subjectEntity = DbContext.Subject.Find(SubjectCode);
             if (subjectEntity is null)
             {
                 return NotFound();
@@ -49,8 +49,8 @@ namespace GradingSystemApi.Controllers
                 SubjectName = AddSubject.SubjectName,
                 Units = AddSubject.Units
             };
-            dbContext.Add(SubjectEntity);
-            dbContext.SaveChanges();
+            DbContext.Add(SubjectEntity);
+            DbContext.SaveChanges();
             return Ok(SubjectEntity);
         }
 
@@ -58,14 +58,14 @@ namespace GradingSystemApi.Controllers
         [Route("{SubjectCode}")]
         public IActionResult UpdateSubject(int SubjectCode,SubjectDto Subject)
         {
-            var subjectEntity = dbContext.Subjects.Find(Subject.SubjectCode);
+            var subjectEntity = DbContext.Subject.Find(Subject.SubjectCode);
             if (subjectEntity is null)
             {
                 return NotFound();
             }
             subjectEntity.SubjectName = Subject.SubjectName;
             subjectEntity.Units = Subject.Units;
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
             return Ok(subjectEntity);
         }
 
@@ -74,13 +74,13 @@ namespace GradingSystemApi.Controllers
 
         public IActionResult DeleteSubject(string SubjectCode)
         {
-            var subjectEntity = dbContext.Subjects.Find(SubjectCode);
+            var subjectEntity = DbContext.Subject.Find(SubjectCode);
             if (subjectEntity is null)
             {
                 return NotFound();
             }
-            dbContext.Remove(subjectEntity);
-            dbContext.SaveChanges();
+            DbContext.Remove(subjectEntity);
+            DbContext.SaveChanges();
             return Ok(subjectEntity);
         }
     }

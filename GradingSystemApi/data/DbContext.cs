@@ -12,16 +12,16 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Data
         }
 
         // DbSets for each model
-        public DbSet<Classes> Classes { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseSubject> CourseSubjects { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
-        public DbSet<Grades> Grades { get; set; }
-        public DbSet<Students> Students { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
-        public DbSet<Terms> Terms { get; set; }
+        public DbSet<Class> Class { get; set; }
+        public DbSet<Course> Course { get; set; }
+        public DbSet<CourseSubject> CourseSubject { get; set; }
+        public DbSet<Enrollment> Enrollment { get; set; }
+        public DbSet<Grade> Grade { get; set; }
+        public DbSet<Student> Student { get; set; }
+        public DbSet<Subject> Subject { get; set; }
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<TeacherSubject> TeacherSubject { get; set; }
+        public DbSet<Term> Term { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

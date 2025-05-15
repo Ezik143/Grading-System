@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace GradingSystemApi.Models.Entities
+
+namespace GradingSystemApi.Models.Dto
 {
-    public class Terms
+    public class TermDto
     {
-        [Key]
-        [Required]
-        public int TermID { get; set; }
         [Required]
         public required string TermName { get; set; }
         [Required]
