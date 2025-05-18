@@ -1,8 +1,9 @@
 ﻿using Team_Yeri_enrollment_system.GradingLibrary.Models;
 using Team_Yeri_enrollment_system.GradingLibrary.Data;
-using GradingSystemApi.Models.Dto;
-using Microsoft.AspNetCore.Mvc;
+using GradingSystemApi.Models.addDto;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using GradingSystemApi.Models.Dto;
 
 
 namespace GradingSystemApi.Controllers

@@ -16,10 +16,5 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Models
 
         [Required]
         public required string Schedule { get; set; }
-        [Required]
-        public required string SubjectCode { get; set; }
-        [ForeignKey("SubjectCode")]
-        [Required]
-        public Subject? Subject { get; set; }
     }
 }

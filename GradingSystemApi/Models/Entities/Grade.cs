@@ -9,24 +9,24 @@ namespace GradingSystemApi.Models.Entities
         [Required]
         public int GradeID { get; set; }
         [Required]
-        public  required int StudentID { get; set; }
-        //[ForeignKey("StudentID")]
-        //[Required]
-        //public Students? Student { get; set; }
-        //[Required]
+        public required string EducationLevel { get; set; }
         public  required int ClassID { get; set; }
-        //[ForeignKey("ClassID")]
-        //[Required]
-        //public Classes? Classes { get; set;}    
         [Required]
-        public required string AssessmentType { get; set; }
-        [Required]
-        public  required int TermID { get; set; }
-        //[ForeignKey("TermID")]
-        //[Required]
-        //public  Terms? Terms { get; set; }
-
         [Column(TypeName = "decimal(5,2)")]
-        public required decimal Score { get; set; }
+        public required decimal GradeValue { get; set; }
+        [Required]
+        [Column(TypeName = "decimal(5,2)")]
+        public required decimal GradeEquivalent { get; set; }
+        [Required]
+        public required string Remark { get; set; }
+        [Required]
+        public required int GradingPeriodID { get; set; }
+        [ForeignKey("GradingPeriodID")]
+        [Required]
+        public GradingPeriod? GradingPeriod { get; set; }
+        [Required]
+        public  required int EnrollmentID { get; set; }
+        [Required]
+        public required DateOnly DateRecorded { get; set; }
     }
 }

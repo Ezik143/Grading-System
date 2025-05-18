@@ -7,11 +7,11 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Data
     public class GradingDbContext : DbContext
     {
         public GradingDbContext(DbContextOptions<GradingDbContext> options)
-            : base(options)
+            : base(options) 
         {
         }
 
-        // DbSets for each model
+        // DbSets for each m    odel
         public DbSet<Class> Class { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<CourseSubject> CourseSubject { get; set; }
@@ -22,10 +22,10 @@ namespace Team_Yeri_enrollment_system.GradingLibrary.Data
         public DbSet<Teacher> Teacher { get; set; }
         public DbSet<TeacherSubject> TeacherSubject { get; set; }
         public DbSet<Term> Term { get; set; }
+        public DbSet<GradingPeriod> GradingPeriod { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -17,7 +17,6 @@ namespace GradingSystemApi.Controllers
         {
             var Class = DbContext.Class
                 .Include(c => c.Teacher) // Include related Teacher entity
-                .Include(c => c.Subject) // Include related Subject entity
                 .ToList();
             return Ok(Class);
         }
@@ -34,7 +33,6 @@ namespace GradingSystemApi.Controllers
             DbContext.SaveChanges();
             var ClassWithDetails = DbContext.Class
                 .Include(c => c.Teacher) // Include related Teacher entity
-                .Include(c => c.Subject) // Include related Subject entity
                 .FirstOrDefault(c => c.ClassID == classEntity.ClassID);
             return Ok(ClassWithDetails);
         }
@@ -48,24 +46,16 @@ namespace GradingSystemApi.Controllers
                 return BadRequest($"Teacher with ID {AddClass.TeacherID} does not exist");
             }
 
-            var ExistSubject = DbContext.Subject.Any(s => s.SubjectCode == AddClass.SubjectCode);
-            if (!ExistSubject)
-            {
-                return BadRequest($"Subject with code {AddClass.SubjectCode} does not exist");
-            }
-
             var ClassEntity = new Class()
             {
                 TeacherID = AddClass.TeacherID,
                 Schedule = AddClass.Schedule,
-                SubjectCode = AddClass.SubjectCode
             };
             DbContext.Add(ClassEntity);
             DbContext.SaveChanges();
 
             var CreatedClass = DbContext.Class
             .Include(c => c.Teacher)
-            .Include(c => c.Subject)
             .FirstOrDefault(c => c.ClassID == ClassEntity.ClassID);
 
             return Ok(CreatedClass);
@@ -85,13 +75,11 @@ namespace GradingSystemApi.Controllers
             // Update properties
             ClassEntity.TeacherID = UpdateClassDto.TeacherID;
             ClassEntity.Schedule = UpdateClassDto.Schedule;
-            ClassEntity.SubjectCode = UpdateClassDto.SubjectCode;
 
             DbContext.SaveChanges();
 
             var UpdatedClass = DbContext.Class
                 .Include(c => c.Teacher) // Include related Teacher entity
-                .Include(c => c.Subject) // Include related Subject entity
                 .FirstOrDefault(c => c.ClassID == ClassEntity.ClassID);
 
             return Ok(UpdatedClass);
@@ -111,7 +99,6 @@ namespace GradingSystemApi.Controllers
 
             var DeletedClass = DbContext.Class
                 .Include(c => c.Teacher) // Include related Teacher entity
-                .Include(c => c.Subject) // Include related Subject entity
                 .FirstOrDefault(c => c.ClassID == Class.ClassID);
 
             return Ok(Class);

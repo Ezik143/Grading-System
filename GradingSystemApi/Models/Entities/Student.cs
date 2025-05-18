@@ -17,7 +17,6 @@ namespace GradingSystemApi.Models.Entities
         [Required]
         public required DateOnly BirthDate { get; set; }
         [Required]
-        [MaxLength(1)]
         public required char Sex { get; set; }
         [Required]
         public required string Email { get; set; }

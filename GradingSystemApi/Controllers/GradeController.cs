@@ -1,9 +1,8 @@
 ﻿using GradingSystemApi.Models.Entities;
 using GradingSystemApi.Models.Dto;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Team_Yeri_enrollment_system.GradingLibrary.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GradingSystemApi.Controllers
 {
@@ -43,31 +42,34 @@ namespace GradingSystemApi.Controllers
         public IActionResult AddGrade(GradeDto AddGrade)
         {
 
-            var ExistStudent = DbContext.Student.Any(s => s.StudentID == AddGrade.StudentID);
-            if (!ExistStudent)
-            {
-                return BadRequest($"Student with code {AddGrade.StudentID} does not exist");
-            }
-
             var ExistClass = DbContext.Class.Any(c => c.ClassID == AddGrade.ClassID);
             if (!ExistClass)
             {
-                return BadRequest($"Class with code {AddGrade.ClassID} does not exist");
+                return BadRequest($"Grade with code {AddGrade.ClassID} does not exist");
             }
 
-            var ExistTerm = DbContext.Term.Any(t => t.TermID == AddGrade.TermID);
-            if (!ExistTerm)
+            var ExistGradingPeriod = DbContext.GradingPeriod.Any(g => g.GradingPeriodID == AddGrade.GradingPeriodID);
+            if (!ExistGradingPeriod)
             {
-                return BadRequest($"Term with code {AddGrade.TermID} does not exist");
+                return BadRequest($"Grading Period with code {AddGrade.GradingPeriodID} does not exist");
+            }
+
+            var ExistEnrollment = DbContext.Enrollment.Any(e => e.EnrollmentID == AddGrade.EnrollmentID);
+            if (!ExistEnrollment)
+            {
+                return BadRequest($"Enrollment with code {AddGrade.EnrollmentID} does not exist");
             }
 
             var GradeEntity = new Grade()
             {
-                StudentID = AddGrade.StudentID,
+                EducationLevel = AddGrade.EducationLevel,
                 ClassID = AddGrade.ClassID,
-                AssessmentType = AddGrade.AssessmentType,
-                TermID = AddGrade.TermID,
-                Score = AddGrade.Score
+                GradeValue = AddGrade.GradeValue,
+                GradeEquivalent = AddGrade.GradeEquivalent,
+                Remark = AddGrade.Remark,
+                GradingPeriodID = AddGrade.GradingPeriodID,
+                EnrollmentID = AddGrade.EnrollmentID,
+                DateRecorded = AddGrade.DateRecorded
             };
 
             DbContext.Add(GradeEntity);
@@ -76,18 +78,14 @@ namespace GradingSystemApi.Controllers
             var CreatedGrade = DbContext.Grade
                 .FirstOrDefault(g => g.GradeID == GradeEntity.GradeID);
 
-            return Ok();
+            return Ok(CreatedGrade);
         }
 
 
         [HttpPut]
         [Route("{GradeID}")]
-        public IActionResult UpdateGrade(int GradeID, Grade UpdateGrade)
+        public IActionResult UpdateGrade(int GradeID, GradeDto UpdateGrade)
         {
-            if (AddGrade == null)
-            {
-                return BadRequest("Cannot be null");
-            }
 
             var GradeEntity = DbContext.Grade.Find(GradeID);
             if (GradeEntity == null)
@@ -95,11 +93,6 @@ namespace GradingSystemApi.Controllers
                 return NotFound();
             }
 
-            var ExistStudent = DbContext.Student.Any(s => s.StudentID == UpdateGrade.StudentID);
-            if (!ExistStudent)
-            {
-                return BadRequest($"Grade with code {UpdateGrade.StudentID} does not exist");
-            }
 
             var ExistClass = DbContext.Class.Any(c => c.ClassID == UpdateGrade.ClassID);
             if (!ExistClass)
@@ -107,18 +100,26 @@ namespace GradingSystemApi.Controllers
                 return BadRequest($"Grade with code {UpdateGrade.ClassID} does not exist");
             }
 
-            var ExistTerm = DbContext.Term.Any(t => t.TermID == UpdateGrade.TermID);
-            if (!ExistTerm)
+            var ExistGradingPeriod = DbContext.GradingPeriod.Any(g => g.GradingPeriodID == UpdateGrade.GradingPeriodID);
+            if (!ExistGradingPeriod)
             {
-                return BadRequest($"Grade with code {UpdateGrade.TermID} does not exist");
+                return BadRequest($"Grading Period with code {UpdateGrade.GradingPeriodID} does not exist");
             }
 
+            var ExistEnrollment = DbContext.Enrollment.Any(e => e.EnrollmentID == UpdateGrade.EnrollmentID);
+            if (!ExistEnrollment)
+            {
+                return BadRequest($"Enrollment with code {UpdateGrade.EnrollmentID} does not exist");
+            }
 
-            GradeEntity.StudentID = UpdateGrade.StudentID;
+            GradeEntity.EducationLevel = UpdateGrade.EducationLevel;
             GradeEntity.ClassID = UpdateGrade.ClassID;
-            GradeEntity.AssessmentType = UpdateGrade.AssessmentType;
-            GradeEntity.TermID = UpdateGrade.TermID;
-            GradeEntity.Score = UpdateGrade.Score;
+            GradeEntity.GradeValue = UpdateGrade.GradeValue;
+            GradeEntity.GradeEquivalent = UpdateGrade.GradeEquivalent;
+            GradeEntity.Remark = UpdateGrade.Remark;
+            GradeEntity.GradingPeriodID = UpdateGrade.GradingPeriodID;
+            GradeEntity.EnrollmentID = UpdateGrade.EnrollmentID;
+            GradeEntity.DateRecorded = UpdateGrade.DateRecorded;
 
             DbContext.SaveChanges();
             var UpdatedGrade = DbContext.Grade

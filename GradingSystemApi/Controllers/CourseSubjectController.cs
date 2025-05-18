@@ -1,5 +1,4 @@
 ﻿using GradingSystemApi.Models.Dto;
-using GradingSystemApi.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Team_Yeri_enrollment_system.GradingLibrary.Data;

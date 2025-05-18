@@ -27,7 +27,7 @@ namespace GradingSystemApi.Controllers
         public IActionResult GetStudentByID(int StudentID)
         {
             var Student = DbContext.Student.Find(StudentID);
-            if (Student == null) 
+            if (Student == null)
             {
                 return NotFound();
             }
@@ -77,11 +77,22 @@ namespace GradingSystemApi.Controllers
             StudentEntity.Email = UpdateStudent.Email;
             StudentEntity.PhoneNumber = UpdateStudent.PhoneNumber;
 
-            return Ok();
+            DbContext.SaveChanges();
+            return Ok(StudentEntity);
         }
 
-
-
-
+        [HttpDelete]
+        [Route("{StudentID}")]
+        public IActionResult DeleteStudent(int StudentID)
+        {
+            var StudentEntity = DbContext.Student.Find(StudentID);
+            if (StudentEntity == null)
+            {
+                return NotFound();
+            }
+            DbContext.Student.Remove(StudentEntity);
+            DbContext.SaveChanges();
+            return Ok(StudentEntity);
+        }
     }
 }
